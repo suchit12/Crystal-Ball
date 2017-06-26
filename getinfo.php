@@ -2,8 +2,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-   		<link rel="stylesheet" type="text/css" href="webpage.css">   
-		<meta http-equiv="Cache-control" content="no-cache">
+   		<link rel="stylesheet" type="text/css" href="webpage.css">    
     </head>
     <body>
     	<p id="box"></p>
@@ -26,47 +25,24 @@
 			<?php
 		// Get a connection for the database
 		require_once('./mysqli_connect.php');
-		$max_results = 5;
 		$sam = '';
+		 
 		// Create a query for the database
-		
-		$con = mysqli_connect('localhost','root','manchester2002');
-		mysqli_select_db($con, 'production_machines');
-		// define how many results you want per page
-		$results_per_page = 6;
-		// find out the number of results stored in database
-		$sql='SELECT * FROM production_servers';
-		$result = mysqli_query($con, $sql);
-		$number_of_results = mysqli_num_rows($result);
-		// determine number of total pages available
-		$number_of_pages = ceil($number_of_results/$results_per_page);
-		// determine which page number visitor is currently on
-		if (!isset($_GET['page'])) {
-		  $page = 1;
-		} else {
-		  $page = $_GET['page'];
-		}
-		// determine the sql LIMIT starting number for the results on the displaying page
-		$this_page_first_result = ($page-1)*$results_per_page;
-		// retrieve selected results from database and display them on page
-		$sql='SELECT * FROM server_entries LIMIT ' . $this_page_first_result . ',' .  $results_per_page;
-		$query = "SELECT * FROM production_servers WHERE ServerName LIKE '$sam%' LIMIT $this_page_first_result, $results_per_page ";
-		$result = mysqli_query($con, $query);
 		
 		if(isset($_POST['search'])){
 			$sam = $_POST['search'];
 		}
-		
+		$query = "SELECT * FROM production_servers WHERE ServerName LIKE '$sam%' ";
+
 		// Get a response from the database by sending the connection
 		// and the query
 		$response = @mysqli_query($dbc, $query);
 		 
 		// If the query executed properly proceed
-
 		if($response){
 		 
-		echo '<div id = "tablet"><table align="left"
-		cellspacing="2" cellpadding="8" overflow = "auto "height: "15em" cellpadding-right= "7" id="table">
+		echo '<table align="left"
+		cellspacing="2" cellpadding="8" cellpadding-right= "7" id="table">
 		 
 		<tr><td align="left" class="even"><b>Server Name</b></td>
 		<td align="left" class="odd"><b>Application</b></td>
@@ -81,21 +57,20 @@
 		echo '<tr><td align="left" class="even">' . 
 		$row['ServerName'] . '</td><td align="left" class="odd">' . 
 		$row['Application'] . '</td><td align="left" class="even">' . 
-		$row['Version'] . '</td><td class="odd">' . 
+		$row['Package'] . '</td><td class="odd">' . 
 		$row['PreviousUpdate'] . '</td></tr>';
 		}
 		 
-		echo '</table></div>';
+		echo '</table>';
+		 
+		} else {
+		 
+		echo "Couldn't issue database query<br />";
+		 
+		echo mysqli_error($dbc);
 		 
 		}
-		else{
-		echo "Could not connect";
-		
-		}
-		for ($page=1;$page<=$number_of_pages;$page++) {
-		  echo '<a class="numbers" href="getinfo.php?page=' . $page . '">' . $page . '</a> ';
-		}
-		
+		 
 		// Close connection to the database
 		mysqli_close($dbc);
 		?>
