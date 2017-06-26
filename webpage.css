@@ -42,17 +42,17 @@ html{
 	border: 1px solid #607d8b;
 	border-bottom: 3px solid #607d8b;
 	padding: 6px;
-	padding-bottom: 4px;
+	padding-bottom: 2px;
 	background: #607d8b;
 	color: white;
 	margin-left: -5px;
 	margin-top: -6px;
+	width: 8%;
 }
 #search{
 	width:70%;
 	height:50%;
 	border: 2px solid #607d8b;
-	border-bottom: 4px solid #607d8b;
 	font-size: 20px;
 	margin-left: -80px;
 	padding-left: 10px;
@@ -62,11 +62,12 @@ html{
 	transition: all 0.4 s;
 }
 #searchbar{
-	margin-top: -570px;
+	margin-top: -650px;
 	margin-left: 30%;
 	z-index:1;
 	position: relative;
 	opacity: 0.7;
+	border-radius: 25px;
 }
 a.hover{
 	color: purple;
@@ -76,13 +77,22 @@ a.hover{
 	z-index: 5;
 	position: relative;
 	margin-top: 10%;
-	margin-left: 50%;
+	margin-left: 30%;
 	text-align: center;
 	border-collapse: collapse;
-	opacity: 0.5;
+	opacity: 0.8;
 } 
 .even{
 	background: rgb(120, 120, 139);
 }
 .odd{
 	background: white;
+}
+/*#tablet{
+	height: 15em;
+	overflow: auto;
+}
+*/
+.numbers{
+	background: rgb(120, 120, 139);
+}
