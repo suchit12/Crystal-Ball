@@ -28,8 +28,8 @@
 		// Get a connection for the database
 		require_once('./mysqli_connect.php');
 		$sam = '';
-		// Create a query for the database
 		
+		// Create a query for the database
 		$con = mysqli_connect('localhost','root','manchester2002');
 		mysqli_select_db($con, 'production_machines');
 		
@@ -51,7 +51,7 @@
 		if (!isset($_GET['page'])) {
 		  $page = 1;
 		} else {
-		  $page = $_GET['page'];
+		  $page = ( !empty( $_GET['page'] ) ) ? ( (int)$_GET['page'] ) : ( 1 );
 		}
 		
 		// determine the sql LIMIT starting number for the results on the displaying page
@@ -90,14 +90,15 @@
 		}
 		 
 		echo '</table></div>';
-		 
+		
 		}
 		else{
 		echo "Could not connect";
-		
+		//?search=$sam&submit=Go&start=0
 		}
+		
 		for ($page=1;$page<=$number_of_pages;$page++) {
-		  echo '<a class="numbers" href="getinfo.php?page=' . $page . '">' . $page . '</a> ';
+			echo '<a class="numbers" href="getinfo.php?search=$sam&page=' . $page . '">' . $page . '</a> ';
 		}
 		
 		// Close connection to the database
