@@ -38,7 +38,7 @@
 		mysqli_select_db($con, 'production_machines');
 		
 		// define how many results you want per page
-		$results_per_page = 1;
+		$results_per_page = 5;
 		if(isset($_POST['search'])){
 			$sam = $_POST['search'];
 		} 
