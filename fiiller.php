@@ -15,7 +15,7 @@
 							<li><a href="">staging</a></li>
 						</ul>
 					</div>
-						<img id="udpic" src="poppy.jpg"/>
+						<img id="udpic" src="start.jpg"/>
 						<form id="searchbar" action="fiiller.php" method="post">
 				    		<input id="search" name = "search" type="text" placeholder="Search..." maxlength="200">
 				    		<input type="submit" id="submit" value="&#128269">
@@ -38,7 +38,7 @@
 		mysqli_select_db($con, 'production_machines');
 		
 		// define how many results you want per page
-		$results_per_page = 2;
+		$results_per_page = 1;
 		if(isset($_POST['search'])){
 			$sam = $_POST['search'];
 		} 
@@ -103,8 +103,14 @@
 		// for ($page=1;$page<=$number_of_pages;$page++) {
 			// echo '<a class="numbers" href="getinfo.php?q='. $sam.'& page= '. $page . '">' . $page . '</a> ';
 		// }
-		$limit = 2;
-		$links = 3;
+		$limit = 1;
+		$links = 1;
+		
+		if(isset($_GET['color'])){
+			$class1 = "active";
+		} else {
+			$color = "";
+		}
 		
 		$last = ceil( $number_of_results / $limit );
 		$html = '<ul class="list">';
@@ -113,35 +119,47 @@
 		$end = ( ( $page + $links ) < $last ) ? $page + $links : $last;
 
 		$class = ( $page == 1 ) ? "disabled" : "";
-		$previous_page = ( $page == 1 ) ? '<a href=""><li class="' . $class . '">&laquo;</a></li>' : '<li class="' . $class . '"><a href="?limit=' . $limit . '&page=' . ( $page - 1 ) . '">&laquo;</a></li>';
-		if ( $start > 1 ) {
+		$previous_page = ( $page == 1 ) ? '<a><li id="first" class="' . $class . '">&laquo;</li></a>' : '<li class="' . $class . '"><a href="?q='. $sam .'&page=' . ( $page - 1 ) . '">&laquo;</a></li>';
+		$html .= $previous_page;
+		
+		if ( $start >= 2  ) {
 			$html .= '<li><a href="?limit=' . $limit . '&page=1">1</a></li>';
-			$html .= '<li class="disabled"><span>...</span></li>';
+			$html .= '<li><span id="middle"><a>...</a><span></li>';
 		}
-		for ( $i = $start ; $i <= $end; $i++ ) { 
-			$class = ( $page == $i ) ? "active" : ""; 
-			//highlight current page 
-			$html .= '<li class="' . $class . '"><a href="?q='. $sam.'& page='. $i . 'limit=' . $limit . '">' . $i . '</a></li>'; 
+		for ( $i = $start ; $i <= $end; $i++ ) {
+			$class1 = ( $page == $i ) ? "active" : "";	
+			if($page == $i)
+				$html .= '<li class="' . $class . '"><a href="?q='. $sam.'& page='. $i .'"><strong>' . $i . '</strong></a></li>'; 
+			else
+				$html .= '<li class="' . $class . '"><a href="?q='. $sam.'& page='. $i .'">' . $i . '</a></li>';
 		}
 			
 		if ( $end < $last ) {
-			$html .= '<li class="disabled"><span>...</span></li>';
+			$html .= '<li><span><a>...</a></span></li>';
 			$i = $page - 1;  
 			$html .= '<li><a href="?q='. $sam .'&page=' . $last . '">' . $last . '</a></li>';
 		}
 		$class = ( $page == $last ) ? "disabled" : "";
 		
-		$next_page = ( $page == $last) ? '<li class="' . $class . '"><a href= "">&raquo;</a></li>' : '<li class="' . $class . '"><a href="?q='. $sam .'&page=' . ( $page + 1 ) . '">&raquo;</li>';		
+		$next_page = ( $page == $last) ? '<li id="last" class="' . $class . '"><a>&raquo;</a></li>' : '<li class="' . $class . '"><a href="?q='. $sam .'&page=' . ( $page + 1 ) . '">&raquo;</li>';		
 		$html .= $next_page; 
 		$html .= '</ul>';
 		echo $html;
 		
+		
+        // echo '$limit: '.$limit.' | '; //total rows per query
+        // echo '$start: '.$start.' | '; //start printing links from
+        // echo '$end: '.$end.' | '; //end printing links at
+        // echo '$last: '.$last.' | '; //last page
+        // echo '$page: '.$page.' | '; //current page
+        // echo '$links: '.$links.' <br /> '; //links 
+		
 		mysqli_close($dbc);
 		?>
 			<div id="lowerpic">
-						<img src="pond.jpg" border="0" width="33%" height = "50%"/>
-						<img src="snow.jpg" border="0" width="33%"/>
-						<img src="valley.jpg" border="0" width="33%"/>
+						<img src="pic1.jpg" border="0" width="32.9%"/>
+						<img id = "two" src="office.jpg" border="0" width="37%"/>
+						<img id = "three" src="table.jpg" border="0" width="426px" height="333px"/>						
 			</div>
 		</div>
     </body>
