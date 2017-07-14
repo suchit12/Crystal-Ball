@@ -13,6 +13,7 @@
 							<li id="home"><a href="">home</a></li>
 							<li><a href="">inventory</a></li>
 							<li><a href="">staging</a></li>
+							<li><a href="">terminal</a></li>
 						</ul>
 					</div>
 						<img id="udpic" src="start.jpg"/>
@@ -38,7 +39,7 @@
 		mysqli_select_db($con, 'production_machines');
 		
 		// define how many results you want per page
-		$results_per_page = 5;
+		$results_per_page = 3;
 		if(isset($_POST['search'])){
 			$sam = $_POST['search'];
 		} 
@@ -103,7 +104,6 @@
 		// for ($page=1;$page<=$number_of_pages;$page++) {
 			// echo '<a class="numbers" href="getinfo.php?q='. $sam.'& page= '. $page . '">' . $page . '</a> ';
 		// }
-		$limit = 1;
 		$links = 1;
 		
 		if(isset($_GET['color'])){
@@ -112,7 +112,7 @@
 			$color = "";
 		}
 		
-		$last = ceil( $number_of_results / $limit );
+		$last = ceil( $number_of_results / $results_per_page );
 		$html = '<ul class="list">';
 		
 		$start = ( ( $page - $links ) > 0 ) ? $page - $links : 1;
@@ -123,16 +123,16 @@
 		$html .= $previous_page;
 		
 		if ( $start >= 2  ) {
-			$html .= '<li><a href="?limit=' . $limit . '&page=1">1</a></li>';
+			$html .= '<li><a href="?limit=' . $results_per_page . '&page=1">1</a></li>';
 			$html .= '<li><span id="middle"><a>...</a><span></li>';
 		}
-		for ( $i = $start ; $i <= $end; $i++ ) {
-			$class1 = ( $page == $i ) ? "active" : "";	
-			if($page == $i)
-				$html .= '<li class="' . $class . '"><a href="?q='. $sam.'& page='. $i .'"><strong>' . $i . '</strong></a></li>'; 
-			else
-				$html .= '<li class="' . $class . '"><a href="?q='. $sam.'& page='. $i .'">' . $i . '</a></li>';
-		}
+		// for ( $i = $start ; $i <= $end; $i++ ) {
+			// $class1 = ( $page == $i ) ? "active" : "";	
+			// if($page == $i)
+				// $html .= '<li class="active"><a href="?q='. $sam.'& page='. $i .'"><strong>' . $i . '</strong></a></li>'; 
+			// else
+				// $html .= '<li><a href="?q='. $sam.'& page='. $i .'">' . $i . '</a></li>';
+		// }
 			
 		if ( $end < $last ) {
 			$html .= '<li><span><a>...</a></span></li>';
@@ -147,7 +147,7 @@
 		echo $html;
 		
 		
-        // echo '$limit: '.$limit.' | '; //total rows per query
+        // echo '$results_per_page: '.$results_per_page.' | '; //total rows per query
         // echo '$start: '.$start.' | '; //start printing links from
         // echo '$end: '.$end.' | '; //end printing links at
         // echo '$last: '.$last.' | '; //last page

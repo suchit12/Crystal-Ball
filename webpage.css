@@ -17,8 +17,24 @@ img{
     /* border-right-width:0px; */
     /* border-left-width:0px; */
 /* } */
+.headerlist{
+	position: absolute;
+	background-color: white;
+	display: inline;
+	padding-right: 180px;
+	box-sizing: border-box;
+	width: 98.9%;
+	min-height: 10%;
+	opacity: 0.8;
+	z-index: 6;
+	padding-bottom: 0px;;
+}
+
 .headerlist ul{
 	list-style-type: none;
+	float: right;
+	left: 530px;
+
 }
 .headerlist ul a{
 	text-decoration: none;
@@ -32,8 +48,8 @@ img{
 	font-style: normal;
 	float: left;
 	margin-left: 170px;
+	top: 5px;
 	position: relative;
-	top:-10px;
 }
 html{
 	font-family: Futura, "Trebuchet MS", Arial, sans-serif;
@@ -42,6 +58,7 @@ html{
 	width: 100%;
 	z-index: 0;
 	height: 100%;
+	margin-top: 100px;
 }
 #lowerpic{
 	position: relative;
@@ -117,7 +134,8 @@ html{
 	font-size: 10px;
 	font-weight: bold;
 	color: #A1A1A1;
-	margin-top: 110px;
+	margin-top: 320px;
+	left: 140px;
 }
 
 .list a{
