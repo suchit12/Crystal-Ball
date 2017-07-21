@@ -54,7 +54,7 @@ img{
 	list-style-type: none;
 	float: right;
 	left: 580px;
-	top: -50px;
+	margin-top: 60px;
 
 }
 .headerlist ul a{
@@ -69,7 +69,7 @@ html{
 }
 #udpic{
 	width: 100%;
-	z-index: 0;
+	z-index: -4;
 	height: 100%;
 	margin-top: 100px;
 	margin-bottom: 0;

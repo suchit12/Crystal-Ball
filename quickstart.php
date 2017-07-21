@@ -1,194 +1,120 @@
 <?php
-namespace App\Http\Controllers;
-use Carbon\Carbon;
-use Google_Client;
-use Google_Service_Calendar;
-use Google_Service_Calendar_Event;
-use Google_Service_Calendar_EventDateTime;
-use Illuminate\Http\Request;
-class gCalendarController extends Controller
-{
-    protected $client;
-    public function __construct()
-    {
-        $client = new Google_Client();
-        $client->setAuthConfig('client_secret.json');
-        $client->addScope(Google_Service_Calendar::CALENDAR);
-        $guzzleClient = new \GuzzleHttp\Client(array('curl' => array(CURLOPT_SSL_VERIFYPEER => false)));
-        $client->setHttpClient($guzzleClient);
-        $this->client = $client;
-    }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        session_start();
-        if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
-            $this->client->setAccessToken($_SESSION['access_token']);
-            $service = new Google_Service_Calendar($this->client);
-            $calendarId = 'primary';
-            $results = $service->events->listEvents($calendarId);
-            return $results->getItems();
-        } else {
-            return redirect()->route('oauthCallback');
-        }
-    }
-    public function oauth()
-    {
-        session_start();
-        $rurl = action('gCalendarController@oauth');
-        $this->client->setRedirectUri($rurl);
-        if (!isset($_GET['code'])) {
-            $auth_url = $this->client->createAuthUrl();
-            $filtered_url = filter_var($auth_url, FILTER_SANITIZE_URL);
-            return redirect($filtered_url);
-        } else {
-            $this->client->authenticate($_GET['code']);
-            $_SESSION['access_token'] = $this->client->getAccessToken();
-            return redirect()->route('cal.index');
-        }
-    }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('calendar.createEvent');
-    }
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        session_start();
-        $startDateTime = $request->start_date;
-        $endDateTime = $request->end_date;
-        if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
-            $this->client->setAccessToken($_SESSION['access_token']);
-            $service = new Google_Service_Calendar($this->client);
-            $calendarId = 'primary';
-            $event = new Google_Service_Calendar_Event([
-                'summary' => $request->title,
-                'description' => $request->description,
-                'start' => ['dateTime' => $startDateTime],
-                'end' => ['dateTime' => $endDateTime],
-                'reminders' => ['useDefault' => true],
-            ]);
-            $results = $service->events->insert($calendarId, $event);
-            if (!$results) {
-                return response()->json(['status' => 'error', 'message' => 'Something went wrong']);
-            }
-            return response()->json(['status' => 'success', 'message' => 'Event Created']);
-        } else {
-            return redirect()->route('oauthCallback');
-        }
-    }
-    /**
-     * Display the specified resource.
-     *
-     * @param $eventId
-     * @return \Illuminate\Http\Response
-     * @internal param int $id
-     */
-    public function show($eventId)
-    {
-        session_start();
-        if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
-            $this->client->setAccessToken($_SESSION['access_token']);
-            $service = new Google_Service_Calendar($this->client);
-            $event = $service->events->get('primary', $eventId);
-            if (!$event) {
-                return response()->json(['status' => 'error', 'message' => 'Something went wrong']);
-            }
-            return response()->json(['status' => 'success', 'data' => $event]);
-        } else {
-            return redirect()->route('oauthCallback');
-        }
-    }
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param $eventId
-     * @return \Illuminate\Http\Response
-     * @internal param int $id
-     */
-    public function update(Request $request, $eventId)
-    {
-        session_start();
-        if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
-            $this->client->setAccessToken($_SESSION['access_token']);
-            $service = new Google_Service_Calendar($this->client);
-            $startDateTime = Carbon::parse($request->start_date)->toRfc3339String();
-            $eventDuration = 30; //minutes
-            if ($request->has('end_date')) {
-                $endDateTime = Carbon::parse($request->end_date)->toRfc3339String();
-            } else {
-                $endDateTime = Carbon::parse($request->start_date)->addMinutes($eventDuration)->toRfc3339String();
-            }
-            // retrieve the event from the API.
-            $event = $service->events->get('primary', $eventId);
-            $event->setSummary($request->title);
-            $event->setDescription($request->description);
-            //start time
-            $start = new Google_Service_Calendar_EventDateTime();
-            $start->setDateTime($startDateTime);
-            $event->setStart($start);
-            //end time
-            $end = new Google_Service_Calendar_EventDateTime();
-            $end->setDateTime($endDateTime);
-            $event->setEnd($end);
-            $updatedEvent = $service->events->update('primary', $event->getId(), $event);
-            if (!$updatedEvent) {
-                return response()->json(['status' => 'error', 'message' => 'Something went wrong']);
-            }
-            return response()->json(['status' => 'success', 'data' => $updatedEvent]);
-        } else {
-            return redirect()->route('oauthCallback');
-        }
-    }
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param $eventId
-     * @return \Illuminate\Http\Response
-     * @internal param int $id
-     */
-    public function destroy($eventId)
-    {
-        session_start();
-        if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
-            $this->client->setAccessToken($_SESSION['access_token']);
-            $service = new Google_Service_Calendar($this->client);
-            $service->events->delete('primary', $eventId);
-        } else {
-            return redirect()->route('oauthCallback');
-        }
-    }
-	
-	$calendar = new Google_Service_Calendar_Calendar();
-	$calendar->setSummary('calendarSummary');
-	$calendar->setTimeZone('America/Los_Angeles');
-
-	$createdCalendar = $service->calendars->insert($calendar);
-
-	echo $createdCalendar->getId();
+// Set your timezone!!
+  
+// Get prev & next month
+if (isset($_GET['ym'])) {
+    $ym = $_GET['ym'];
+} else {
+    // This month
+    $ym = date('Y-m');
 }
+  
+// Check format
+$timestamp = strtotime($ym,"-01");
+if ($timestamp === false) {
+    $timestamp = time();
+}
+  
+// Today
+$today = date('Y-m-j', time());
+  
+// For H3 title
+$html_title = date('Y / m', $timestamp);
+  
+// Create prev & next month link     mktime(hour,minute,second,month,day,year)
+$prev = date('Y-m', mktime(0, 0, 0, date('m', $timestamp)-1, 1, date('Y', $timestamp)));
+$next = date('Y-m', mktime(0, 0, 0, date('m', $timestamp)+1, 1, date('Y', $timestamp)));
+  
+// Number of days in the month
+$day_count = date('t', $timestamp);
+  
+// 0:Sun 1:Mon 2:Tue ...
+$str = date('w', mktime(0, 0, 0, date('m', $timestamp), 1, date('Y', $timestamp)));
+  
+  
+// Create Calendar!!
+$weeks = array();
+$week = '';
+  
+// Add empty cell
+$week .= str_repeat('<td></td>', $str);
+  
+for ( $day = 1; $day <= $day_count; $day++, $str++) {
+     
+    $date = $ym.'-'.$day;
+     
+    if ($today == $date) {
+        $week .= '<td class="today">'.$day;
+    } else {
+        $week .= '<td>'.$day;
+    }
+    $week .= '</td>';
+     
+    // End of the week OR End of the month
+    if ($str % 7 == 6 || $day == $day_count) {
+         
+        if($day == $day_count) {
+            // Add empty cell
+            $week .= str_repeat('<td></td>', 6 - ($str % 7));
+        }
+         
+        $weeks[] = '<tr>'.$week.'</tr>';
+         
+        // Prepare for new week
+        $week = '';
+         
+    }
+  
+}
+  
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Calendar</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Noto+Sans:400,700' rel='stylesheet' type='text/css'>
+    <style>
+        .container {
+            font-family: 'Noto Sans', sans-serif;
+            margin-top: 80px;
+        }
+        th {
+            height: 30px;
+            text-align: center;
+            font-weight: 700;
+        }
+        td {
+            height: 100px;
+        }
+        .today {
+            background: orange;
+        }
+    </style>
+     
+</head>
+<body>
+    <div class="container">
+        <h3><a href="?ym=<?php echo $prev; ?>">&lt;</a> <?php echo $html_title; ?> <a href="?ym=<?php echo $next; ?>">&gt;</a></h3>
+        <br>
+        <table class="table table-bordered">
+            <tr>
+                <th>Su</th>
+                <th>M</th>
+                <th>T</th>
+                <th>W</th>
+                <th>T</th>
+                <th>F</th>
+                <th>Sa</th>
+            </tr>
+            <?php
+                foreach ($weeks as $week) {
+                    echo $week;
+                }   
+            ?>
+        </table>
+    </div>
+</body>
+</html>

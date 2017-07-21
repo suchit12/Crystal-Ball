@@ -1,7 +1,110 @@
+<?php
+// Set your timezone!!
+  
+// Get prev & next month
+if (isset($_GET['ym'])) {
+    $ym = $_GET['ym'];
+} else {
+    // This month
+    $ym = date('Y-m');
+}
+  
+// Check format
+$timestamp = strtotime($ym,"-01");
+if ($timestamp === false) {
+    $timestamp = time();
+}
+  
+// Today
+$today = date('Y-m-j', time());
+  
+// For H3 title
+$html_title = date('Y / m', $timestamp);
+  
+// Create prev & next month link     mktime(hour,minute,second,month,day,year)
+$prev = date('Y-m', mktime(0, 0, 0, date('m', $timestamp)-1, 1, date('Y', $timestamp)));
+$next = date('Y-m', mktime(0, 0, 0, date('m', $timestamp)+1, 1, date('Y', $timestamp)));
+  
+// Number of days in the month
+$day_count = date('t', $timestamp);
+  
+// 0:Sun 1:Mon 2:Tue ...
+$str = date('w', mktime(0, 0, 0, date('m', $timestamp), 1, date('Y', $timestamp)));
+  
+  
+// Create Calendar!!
+$weeks = array();
+$week = '';
+  
+// Add empty cell
+$week .= str_repeat('<td></td>', $str);
+  
+for ( $day = 1; $day <= $day_count; $day++, $str++) {
+     
+    $date = $ym.'-'.$day;
+     
+    if ($today == $date) {
+        $week .= '<td class="today">'.$day;
+    } else {
+        $week .= '<td>'.$day;
+    }
+    $week .= '</td>';
+     
+    // End of the week OR End of the month
+    if ($str % 7 == 6 || $day == $day_count) {
+         
+        if($day == $day_count) {
+            // Add empty cell
+            $week .= str_repeat('<td></td>', 6 - ($str % 7));
+        }
+         
+        $weeks[] = '<tr>'.$week.'</tr>';
+         
+        // Prepare for new week
+        $week = '';
+         
+    }
+  
+}
+  
+?>
 <!DOCTYPE html>
 <html>
     <head>
-   		<link rel="stylesheet" type="text/css" href="schedule.css">    
+   		<link rel="stylesheet" type="text/css" href="schedule.css">  
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		<link href='https://fonts.googleapis.com/css?family=Noto+Sans:400,700' rel='stylesheet' type='text/css'>
+		<style>
+		
+        .container {
+            font-family: 'Noto Sans', sans-serif;
+            margin-top: -750px;
+			background-color: white;
+			z-index: 5;
+        }
+        th {
+            height: 30px;
+            font-weight: 700;
+        }
+        td {
+            height: 100px;
+			border: 3px solid #607d8b;
+        }
+        .today {
+            background: orange;
+        }
+		.header{
+			font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+		}
+		#name{
+			font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+		}
+		#mess{
+			margin-left: 50px;
+			text-decoration: none;
+			color: #555656;
+		}
+    </style>
     </head>
     <body>
     	<p id="box"></p>
@@ -19,56 +122,26 @@
 					</div>
 						<img id="udpic" src="ocean.jpg"/>
 					
-					<iframe id = "calendar" src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=1&amp;bgcolor=%23ffcc99&amp;src=bttta8t5mfao15sb6inaf6l34k%40group.calendar.google.com&amp;color=%238D6F47&amp;ctz=America%2FLos_Angeles" style="border:solid 1px #777"
-					width="800" height="600" frameborder="0" scrolling="no"></iframe>
-					// <?php
-					
-						// session_start();
-						// if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
-							// $client->setAccessToken($_SESSION['access_token']);
-							// $service = new Google_Service_Calendar($client);
-							// $calendarId = 'primary';
-							// $results = $service->events->insert($calendarId, $event);
-						
-						// }
-						// require_once 'vendor/autoload.php';
-						
-						// $client = new Google_Client();
-						// $client->setAuthConfig('client_secret.json');
-						// $client->addScope(Google_Service_Calendar::CALENDAR);
-						
-						// $event = new Google_Service_Calendar_Event(array(
-						  // 'summary' => 'Google I/O 2015',
-						  // 'location' => '800 Howard St., San Francisco, CA 94103',
-						  // 'description' => 'A chance to hear more about Google\'s developer products.',
-						  // 'start' => array(
-							// 'dateTime' => '2015-05-28T09:00:00-07:00',
-							// 'timeZone' => 'America/Los_Angeles',
-						  // ),
-						  // 'end' => array(
-							// 'dateTime' => '2015-05-28T17:00:00-07:00',
-							// 'timeZone' => 'America/Los_Angeles',
-						  // ),
-						  // 'recurrence' => array(
-							// 'RRULE:FREQ=DAILY;COUNT=2'
-						  // ),
-						  // 'attendees' => array(
-							// array('email' => 'lpage@example.com'),
-							// array('email' => 'sbrin@example.com'),
-						  // ),
-						  // 'reminders' => array(
-							// 'useDefault' => FALSE,
-							// 'overrides' => array(
-							  // array('method' => 'email', 'minutes' => 24 * 60),
-							  // array('method' => 'popup', 'minutes' => 10),
-							// ),
-						  // ),
-						// ));
-
-					// $calendarId = 'primary';
-					// $events->insert($calendarId, $event);
-					// printf('Event created: %s\n', $event->htmlLink);
-					// ?>
+					<div class="container">
+					<h3><a href="?ym=<?php echo $prev; ?>">&lt;</a> <?php echo $html_title; ?> <a href="?ym=<?php echo $next; ?>">&gt;</a><a id="mess">Releases</a></h3> 
+					<br>
+					<table class="table table-bordered">
+						<tr>
+							<th>Su</th>
+							<th>M</th>
+							<th>T</th>
+							<th>W</th>
+							<th>T</th>
+							<th>F</th>
+							<th>Sa</th>
+						</tr>
+						<?php
+							foreach ($weeks as $week) {
+								echo $week;
+							}   
+						?>
+					</table>
+				</div>
 
 			</div>
 		</body>
