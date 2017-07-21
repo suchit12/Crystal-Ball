@@ -10,7 +10,7 @@
 					<div class="headerlist">
 						<h2 id="name">Crystal Ball</h2>
 						<ul>
-							<li id="home"><a href="">home</a></li>
+							<li><a href="schedule.php">schedule</a></li>
 							<li><a href="">inventory</a></li>
 							<li><a href="">staging</a></li>
 							<li><a href="">terminal</a></li>
@@ -39,7 +39,7 @@
 		mysqli_select_db($con, 'production_machines');
 		
 		// define how many results you want per page
-		$results_per_page = 3;
+		$results_per_page = 1;
 		if(isset($_POST['search'])){
 			$sam = $_POST['search'];
 		} 
@@ -122,10 +122,10 @@
 		$previous_page = ( $page == 1 ) ? '<a><li id="first" class="' . $class . '">&laquo;</li></a>' : '<li class="' . $class . '"><a href="?q='. $sam .'&page=' . ( $page - 1 ) . '">&laquo;</a></li>';
 		$html .= $previous_page;
 		
-		if ( $start >= 2  ) {
-			$html .= '<li><a href="?limit=' . $results_per_page . '&page=1">1</a></li>';
-			$html .= '<li><span id="middle"><a>...</a><span></li>';
-		}
+		// if ( $start >= 2  ) {
+			// $html .= '<li><a href="?limit=' . $results_per_page . '&page=1">1</a></li>';
+			// $html .= '<li><span id="middle"><a>...</a><span></li>';
+		// }
 		// for ( $i = $start ; $i <= $end; $i++ ) {
 			// $class1 = ( $page == $i ) ? "active" : "";	
 			// if($page == $i)
@@ -134,11 +134,11 @@
 				// $html .= '<li><a href="?q='. $sam.'& page='. $i .'">' . $i . '</a></li>';
 		// }
 			
-		if ( $end < $last ) {
-			$html .= '<li><span><a>...</a></span></li>';
-			$i = $page - 1;  
-			$html .= '<li><a href="?q='. $sam .'&page=' . $last . '">' . $last . '</a></li>';
-		}
+		// if ( $end < $last ) {
+			// $html .= '<li><span><a>...</a></span></li>';
+			// $i = $page - 1;  
+			// $html .= '<li><a href="?q='. $sam .'&page=' . $last . '">' . $last . '</a></li>';
+		// }
 		$class = ( $page == $last ) ? "disabled" : "";
 		
 		$next_page = ( $page == $last) ? '<li id="last" class="' . $class . '"><a>&raquo;</a></li>' : '<li class="' . $class . '"><a href="?q='. $sam .'&page=' . ( $page + 1 ) . '">&raquo;</li>';		
