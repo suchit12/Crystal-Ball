@@ -90,7 +90,7 @@
 		echo '<tr><td align="left" class="even">' . 
 		$row['ServerName'] . '</td><td align="left" class="odd">' . 
 		$row['Application'] . '</td><td align="left" class="even">' . 
-		$row['Version'] . '</td><td class="odd">' . 
+		$row['Version'] . '</td><td alighn="left" class="odd">' . 
 		$row['PreviousUpdate'] . '</td></tr>';
 		}
 		 
