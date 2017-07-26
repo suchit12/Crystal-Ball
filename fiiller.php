@@ -29,24 +29,23 @@
 		require_once('./mysqli_connect.php');
 		
 		if(isset($_GET['q'])){
-			$sam = $_GET['q'];
+			$sam = $_GET['q']; //checks if the query has been sent from the search bar
 		} else{
 			$sam = "";
 		}	
 			
 		// Create a query for the database
-		$con = mysqli_connect('localhost','root','manchester2002');
-		mysqli_select_db($con, 'production_machines');
+		$con = mysqli_connect('localhost','root','manchester2002'); //password and username for the localhost
+		mysqli_select_db($con, 'production_machines'); //sets the database name
 		
-		// define how many results you want per page
-		$results_per_page = 1;
-		if(isset($_POST['search'])){
+		$results_per_page = 1;// define how many results you want per page
+		if(isset($_POST['search'])){ //sets sam equal to the value of the search bar
 			$sam = $_POST['search'];
 		} 
 		
 		// find out the number of results stored in database
-		$sql= "SELECT * FROM production_servers WHERE ServerName LIKE '%$sam%'";
-		$result = mysqli_query($con, $sql);
+		$sql= "SELECT * FROM production_servers WHERE ServerName LIKE '%$sam%'"; //query to get how many results in the database
+		$result = mysqli_query($con, $sql); //query to make pagination, to make it work, uncomment code below
 		$number_of_results = mysqli_num_rows($result);
 		
 		// determine number of total pages available
@@ -60,10 +59,10 @@
 		}
 		
 		// determine the sql LIMIT starting number for the results on the displaying page
-		$this_page_first_result = ($page-1)*$results_per_page;
+		$this_page_first_result = ($page-1)*$results_per_page; //$this_page_first_result decides what element of the database should be displayed first
 		
 		// retrieve selected results from database and display them on page
-		$query = "SELECT * FROM production_servers WHERE ServerName LIKE '%$sam%' LIMIT $this_page_first_result, $results_per_page ";
+		$query = "SELECT * FROM production_servers WHERE ServerName LIKE '%$sam%' LIMIT $this_page_first_result, $results_per_page "; 
 		$result = mysqli_query($con, $query);
 		
 		// Get a response from the database by sending the connection
@@ -87,7 +86,7 @@
 
 		while($row = mysqli_fetch_array($response)){
 		 
-		echo '<tr><td align="left" class="even">' . 
+		echo '<tr><td align="left" class="even">' .  //creates a table for the information
 		$row['ServerName'] . '</td><td align="left" class="odd">' . 
 		$row['Application'] . '</td><td align="left" class="even">' . 
 		$row['Version'] . '</td><td alighn="left" class="odd">' . 
@@ -146,7 +145,7 @@
 		$html .= '</ul>';
 		echo $html;
 		
-		
+		// cooe for testing
         // echo '$results_per_page: '.$results_per_page.' | '; //total rows per query
         // echo '$start: '.$start.' | '; //start printing links from
         // echo '$end: '.$end.' | '; //end printing links at
