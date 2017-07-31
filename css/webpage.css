@@ -130,12 +130,11 @@ html{
 .list{
 	display: inline-block;
 	position: relative;
-	margin-left: -250px;
 	font-size: 10px;
 	font-weight: bold;
 	color: #A1A1A1;
 	margin-top: 270px;
-	left: 140px;
+	right: 30%
 
 }
 
@@ -145,6 +144,7 @@ html{
 	border: 1px solid #A8ABAD;
 	background-color: #FFFFFF;
 	color: #A1A1A1;
+	margin: 100%;
 }
 
 
@@ -187,19 +187,15 @@ img {
 	z-index: 5;
 }
 #first{
-	border-top-right-radius:5px;
-	border-bottom-right-radius: 5px;
-}
-#last{
 	border-top-left-radius:5px;
 	border-bottom-left-radius: 5px;
+	
+}
+#last{
+	border-top-right-radius:5px;
+	border-bottom-right-radius: 5px;
 }
 a:hover{
 	line-height: 1;
 	text-decoration: none;
-}
-.production{
-	margin-top: -100px;
-	position: relative;
-	color: red;
 }

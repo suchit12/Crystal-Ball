@@ -39,18 +39,54 @@
 		mysqli_select_db($con, 'production_machines');
 		
 		// define how many results you want per page
-		$results_per_page = 2;
+		$results_per_page = 2; //Change this number to change how many results show on the page
 		if(isset($_POST['search'])){
 			$sam = $_POST['search'];
 		} 
 		
 		// find out the number of results stored in database
-		$sql= "SELECT * FROM production_servers WHERE ServerName OR Application LIKE '%$sam%'";
-		$result = mysqli_query($con, $sql);
-		$number_of_results = mysqli_num_rows($result);
+		$temp = 0;
+		$query = " ";
+		$result = " ";
+		
+		$sql= "SELECT * FROM production_servers WHERE ServerName LIKE '%$sam%'";
+		$mysqli_result = mysqli_query($con, $sql);
+		$number_of_results = mysqli_num_rows($mysqli_result);
+		
+		if($number_of_results > 0){
+			$temp = 1;
+			$number_of_results1 = mysqli_num_rows($mysqli_result);
+		}
+		
+		$sql= "SELECT * FROM production_servers WHERE Application LIKE '%$sam%'";
+		$mysqli_result = mysqli_query($con, $sql);
+		$number_of_results = mysqli_num_rows($mysqli_result);
+		
+		if($number_of_results > 0){
+			$temp = 2;
+			$number_of_results1 = mysqli_num_rows($mysqli_result);
+		}
+		
+		$sql= "SELECT * FROM production_servers WHERE Version LIKE '%$sam%'";
+		$mysqli_result = mysqli_query($con, $sql);
+		$number_of_results = mysqli_num_rows($mysqli_result);
+		
+		if($number_of_results > 0){
+			$temp = 3;
+			$number_of_results1 = mysqli_num_rows($mysqli_result);
+		}
+		
+		$sql= "SELECT * FROM production_servers WHERE PreviousUpdate LIKE '%$sam%'";
+		$mysqli_result = mysqli_query($con, $sql);
+		$number_of_results = mysqli_num_rows($mysqli_result);
+		
+		if($number_of_results > 0){
+			$temp = 4;
+			$number_of_results1 = mysqli_num_rows($mysqli_result);
+		}
 		
 		// determine number of total pages available
-		$number_of_pages = ceil($number_of_results/$results_per_page) ;
+		$number_of_pages = ceil($number_of_results/$results_per_page);
 
 		// determine which page number visitor is currently on
 		if (!isset($_GET['page'])) {
@@ -61,18 +97,27 @@
 		
 		// determine the sql LIMIT starting number for the results on the displaying page
 		$this_page_first_result = ($page-1)*$results_per_page;
-		
-		// retrieve selected results from database and display them on page
-		$query = "SELECT * FROM production_servers WHERE Application OR ServerName LIKE '%$sam%' LIMIT $this_page_first_result, $results_per_page ";
-		$result = mysqli_query($con, $query);
-		
-		// Get a response from the database by sending the connection
-		// and the query
-		$response = @mysqli_query($dbc, $query);
 		 
 		// If the query executed properly proceed
+		if($temp == 1){
+			$query = "SELECT * FROM production_servers WHERE ServerName LIKE '%$sam%' LIMIT $this_page_first_result, $results_per_page ";
+			$result = mysqli_query($con, $query);
+			
+		}elseif($temp == 2){
+			$query = "SELECT * FROM production_servers WHERE Application LIKE '%$sam%' LIMIT $this_page_first_result, $results_per_page ";
+			$result = mysqli_query($con, $query);
+			
+		}elseif($temp == 3){
+			$query = "SELECT * FROM production_servers WHERE Version LIKE '%$sam%' LIMIT $this_page_first_result, $results_per_page ";
+			$result = mysqli_query($con, $query);
+			
+		}elseif($temp == 4){
+			$query = "SELECT * FROM production_servers WHERE PreviousUpdate LIKE '%$sam%' LIMIT $this_page_first_result, $results_per_page ";
+			$result = mysqli_query($con, $query);
+			
+		}
 
-		if($response){
+		if($result){
 		 
 		echo '<div id = "tablet"><table align="left"
 		cellspacing="2" cellpadding="8" overflow = "auto" height: "15em" cellpadding-right= "7" id="table">
@@ -85,7 +130,7 @@
 		// mysqli_fetch_array will return a row of data from the query
 		// until no further data is available
 
-		while($row = mysqli_fetch_array($response)){
+		while($row = mysqli_fetch_array($result)){
 		 
 		echo '<tr><td align="left" class="even">' . 
 		$row['ServerName'] . '</td><td align="left" class="odd">' . 
@@ -112,7 +157,7 @@
 			$color = "";
 		}
 		
-		$last = ceil( $number_of_results / $results_per_page );
+		$last = ceil( $number_of_results1 / $results_per_page );
 		$html = '<ul class="list">';
 		
 		$start = ( ( $page - $links ) > 0 ) ? $page - $links : 1;
@@ -142,7 +187,7 @@
 		// }
 		$class = ( $page == $last ) ? "disabled" : "";
 		
-		$next_page = ( $page == $last) ? '<li id="last" class=" ' . $class . '"><a>&raquo;</a></li>' : '<li class="' . $class . '"><a href="?q='. $sam .'&page=' . ( $page + 1 ) . '">&raquo;</li>';		
+		$next_page = ( $page == $number_of_pages) ? '<li id="last" class=" ' . $class . '"><a>&raquo;</a></li>' : '<li class="' . $class . '"><a href="?q='. $sam .'&page=' . ( $page + 1 ) . '">&raquo;</li>';		
 		$html .= $next_page; 
 		$html .= '</ul>';
 		echo $html;
@@ -162,10 +207,6 @@
 						<img id = "two" src="../images/office.jpg" border="0" width="37%"/>
 						<img id = "three" src="../images/table.jpg" border="0" width="426px" height="333px"/>						
 			</div>
-			<div class = "production">
-				<p> Servers for </p>
-				<p> Production </p>
-			<div>
 		</div>
     </body>
 </html>
