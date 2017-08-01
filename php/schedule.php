@@ -111,11 +111,11 @@
 					<div class="headerlist">
 						<h2 id="name">Crystal Ball</h2>
 						<ul>
-
+							<li><a href="./php/schedule.php">schedule</a></li>
 							<li><a href="">inventory</a></li>
 							<li><a href="">staging</a></li>
 							<li><a href="">terminal</a></li>
-							<li id="home"><a href="index.php">home</a></li>
+							<li id="home"><a href="../index.php">home</a></li>
 						</ul>
 					</div>
 						<img id="udpic" src="../images/beach.jpg"/>

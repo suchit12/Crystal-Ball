@@ -17,7 +17,6 @@
 				$newline1 = rtrim($newline, " ");
 				$line = rtrim($line1, " \t.");
 				if($line != $newline1){
-					echo $line1 . '<br>';
 					echo $newline . '<br>';
 					$a = explode(" ", $newline);
 					$server = $a[0];

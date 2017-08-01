@@ -92,7 +92,7 @@ html{
 	transition: all 0.4 s;
 }
 #searchbar{
-	margin-top: -750px;
+	margin-top: -600px;
 	margin-left: 25%;
 	z-index:1;
 	position: relative;
@@ -107,9 +107,10 @@ html{
 #table{
 	z-index: 5;
 	position: relative;
-	margin-top: 10%;
+	margin-top: 5%;
 	margin-left: 30%;
 	width: 38%;
+	height: 20%;
 	border-collapse: collapse;
 	opacity: 0.9;
 } 
@@ -133,18 +134,20 @@ html{
 	font-size: 10px;
 	font-weight: bold;
 	color: #A1A1A1;
-	margin-top: 270px;
-	right: 30%
+	margin-top: 3.5%;
+	right: 30%;
 
 }
 
 .list a{
-	padding: 4px 8px;
+	padding: 6px 9px;
 	text-decoration: none;
 	border: 1px solid #A8ABAD;
+	position:relative;
 	background-color: #FFFFFF;
 	color: #A1A1A1;
-	margin: 100%;
+	right: 147px;
+	margin-right: 170px;
 }
 
 
@@ -162,40 +165,14 @@ html{
 li {
 	display: inline;
 }
-
-span{
-	background: white;
-	border-top-right-radius:5px;
-	border-bottom-right-radius: 5px;
-	border-top-left-radius:5px;
-	border-bottom-left-radius: 5px;
-}
 img {
 	margin: 0px;
-}
-#two{
-	margin-left: -10px;
-}
-#three{
-	margin-left: -20px;
-}
-#text{
-	margin-top: -250px;
-	margin-left: 100px;
-	position: relative;
-	color: red;
-	z-index: 5;
-}
-#first{
-	border-top-left-radius:5px;
-	border-bottom-left-radius: 5px;
-	
-}
-#last{
-	border-top-right-radius:5px;
-	border-bottom-right-radius: 5px;
 }
 a:hover{
 	line-height: 1;
 	text-decoration: none;
+}
+#error{
+	margin-left: 19%;
+	color: #b5462b;
 }
