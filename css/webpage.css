@@ -5,7 +5,7 @@ html,body
     margin: 0px;
     padding: 0px;
     overflow-x: hidden; 
-	background-color: white;
+	background-color: white
 }
 img{
 	margin:0;
@@ -26,6 +26,7 @@ img{
 	opacity: 0.8;
 	z-index: 6;
 	margin-top: -17px;
+	position: fixed;
 }
 
 .headerlist ul{
@@ -174,5 +175,5 @@ a:hover{
 }
 #error{
 	margin-left: 19%;
-	color: #b5462b;
+	color: #cbcfd6;
 }
