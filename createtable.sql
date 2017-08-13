@@ -11,3 +11,4 @@ CREATE TABLE(
 INSERT INTO production_servers (ServerName, 
 	Application, Version, PreviousUpdate) VALUES 
 	'prearchiver02-02.usw', 'Java', '4.5.2', '2015-06-07' );
+
