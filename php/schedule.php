@@ -8,7 +8,7 @@
 		if (isset($_GET['ym'])) {
 			$ym = $_GET['ym'];
 		} else {
-			// This month
+		// This month
 			$ym = date('Y-m-j');
 		}
 		  
@@ -87,7 +87,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-   		<link rel="stylesheet" type="text/css" href="schedule.css">  
+   		<link rel="stylesheet" type="text/css" href="../css/schedule.css">  
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 		<link href='https://fonts.googleapis.com/css?family=Noto+Sans:400,700' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
@@ -111,14 +111,14 @@
 					<div class="headerlist">
 						<h2 id="name">Crystal Ball</h2>
 						<ul>
-
+							<li><a href="./php/schedule.php">schedule</a></li>
 							<li><a href="">inventory</a></li>
 							<li><a href="">staging</a></li>
 							<li><a href="">terminal</a></li>
-							<li id="home"><a href="fiiller.php">home</a></li>
+							<li id="home"><a href="../index.php">home</a></li>
 						</ul>
 					</div>
-						<img id="udpic" src="ocean.jpg"/>
+						<img id="udpic" src="../images/beach.jpg"/>
 					
 					<div class="container">
 					<h3><a class="sam" href="?ym=<?php echo $prev; ?>">&lt;</a> <?php echo $html_title; ?> <a class="sam" href="?ym=<?php echo $next; ?>">&gt;</a><a id="mess">Releases</a></h3> 
